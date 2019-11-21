@@ -1,0 +1,41 @@
+.slider-container {
+    width: 600px;
+}
+
+.image-slider {
+    width: 100%;
+    height: 100%;
+}
+
+.items {
+    display: flex;
+}
+
+.texts {
+    position: relative;
+}
+
+.item-wrapper, .text-wrapper {
+    transition: all 1s;
+}
+
+.item-wrapper {
+    opacity: 0.5;
+}
+
+.image-wrapper img {
+    width: 100%;
+    height: 100%;
+}
+
+.text-wrapper {
+    opacity: 0;
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+}
+
+.selected, .visible {
+    opacity: 1;
+}
