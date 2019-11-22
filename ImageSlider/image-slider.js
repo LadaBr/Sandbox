@@ -6,7 +6,6 @@ function ImageSliderFactory(options) {
         item: 'item-wrapper',
         text: 'text-wrapper'
     };
-
     this.elements.forEach(function (ele) {
         this.sliders.push(new ImageSlider(ele, this.selectors));
     }.bind(this));
@@ -46,5 +45,5 @@ ImageSlider.prototype.setCurrentItem = function (val) {
 
 
 var slider = new ImageSliderFactory({
-    selector: '.image-slider',
-})
+    selector: '.image-slider'
+});
