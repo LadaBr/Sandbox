@@ -21,8 +21,12 @@ function ImageSlider(element, selectors) {
     this.currentItem = null;
 
     this.images.forEach(function(imgContainer, index) {
+        var relativeText = this.texts[index];
         imgContainer.addEventListener("click", function() {
             this.setCurrentItem(index);
+            if (!isWholeElementInViewport(relativeText)) {
+                relativeText.scrollIntoView({ block: 'end', inline: 'nearest', behavior: 'smooth' });
+            }
         }.bind(this));
     }.bind(this));
     this.setCurrentItem(0);
@@ -43,6 +47,16 @@ ImageSlider.prototype.setCurrentItem = function (val) {
     this.texts[val].className = this.selectors.text + ' visible';
 };
 
+function isWholeElementInViewport (el) {
+
+    var rect = el.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.top + rect.height  <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+        rect.right + rect.width  <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+    );
+}
 
 var slider = new ImageSliderFactory({
     selector: '.image-slider'
