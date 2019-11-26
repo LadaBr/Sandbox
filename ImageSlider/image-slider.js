@@ -9,8 +9,6 @@ function ImageSliderFactory(options) {
     this.elements.forEach(function (ele) {
         this.sliders.push(new ImageSlider(ele, this.selectors));
     }.bind(this));
-
-
 }
 
 function ImageSlider(element, selectors) {
@@ -18,7 +16,6 @@ function ImageSlider(element, selectors) {
     this.selectors = selectors;
     this.images = this.element.querySelectorAll('.' + this.selectors.item);
     this.texts = this.element.querySelectorAll('.' + this.selectors.text);
-    this.currentItem = null;
 
     this.images.forEach(function(imgContainer, index) {
         var relativeText = this.texts[index];
@@ -33,13 +30,11 @@ function ImageSlider(element, selectors) {
 }
 
 ImageSlider.prototype.setCurrentItem = function (val) {
-    this.currentItem = val;
-
-    this.images.forEach(function (container, index) {
+    this.images.forEach(function (container) {
         container.className = this.selectors.item;
     }.bind(this));
 
-    this.texts.forEach(function (container, index) {
+    this.texts.forEach(function (container) {
         container.className = this.selectors.text;
     }.bind(this));
 
@@ -58,6 +53,6 @@ function isWholeElementInViewport (el) {
     );
 }
 
-var slider = new ImageSliderFactory({
+new ImageSliderFactory({
     selector: '.image-slider'
 });
