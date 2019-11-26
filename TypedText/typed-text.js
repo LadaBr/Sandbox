@@ -1,40 +1,49 @@
-function TypedText(selector) {
+function TypedTextFactory(selector) {
     this.elements = document.querySelectorAll(selector);
     this.elements.forEach(function (ele) {
-        var text = ele.innerText;
-        this.render(ele, text);
+        new TypedText(ele);
     }.bind(this));
 }
 
-TypedText.prototype.render = function (ele, text) {
+function TypedText(ele) {
+    this.index = 0;
+    this.texts = [];
+    this.ele = ele;
+    ele.querySelectorAll('span').forEach(function (value) {
+        this.texts.push(value.innerHTML);
+    }.bind(this));
+    if (!this.texts.length) this.texts.push(ele.innerText);
+    this.render();
+}
 
+TypedText.prototype.render = function () {
+    var text = this.texts[this.index];
     var txtContainer = document.createElement('span');
-    ele.innerHTML = '';
-    ele.appendChild(txtContainer);
+    this.ele.innerHTML = '';
+    this.ele.appendChild(txtContainer);
     var currentIndex = 0;
     var interval = setInterval(function () {
         if (currentIndex >= text.length) {
             clearInterval(interval);
-            if (ele.dataset.eraseSpeed)
-                setTimeout(this.erase.bind(this, ele, text, txtContainer), parseFloat(ele.dataset.interval));
+            if (this.ele.dataset.eraseSpeed)
+                setTimeout(this.erase.bind(this, txtContainer), parseFloat(this.ele.dataset.interval));
             return;
         }
         txtContainer.innerHTML += text[currentIndex];
         currentIndex++;
-    }.bind(this), parseFloat(ele.dataset.speed));
+    }.bind(this), parseFloat(this.ele.dataset.speed));
 };
 
-TypedText.prototype.erase = function (ele, text, txtContainer) {
+TypedText.prototype.erase = function (txtContainer) {
     var interval = setInterval(function () {
         if (txtContainer.innerHTML.length <= 0) {
+            this.index = this.index < this.texts.length - 1 ? this.index + 1 : 0;
             clearInterval(interval);
-            this.render(ele, text);
+            this.render();
             return;
         }
         txtContainer.innerHTML = txtContainer.innerHTML.substring(0, txtContainer.innerHTML.length - 1);
-    }.bind(this), parseFloat(ele.dataset.eraseSpeed));
+    }.bind(this), parseFloat(this.ele.dataset.eraseSpeed));
 };
 
-
-
-var typedText = new TypedText('.typed-text');
+new TypedTextFactory('.typed-text');
