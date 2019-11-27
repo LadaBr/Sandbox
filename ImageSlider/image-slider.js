@@ -4,7 +4,7 @@ function ImageSliderFactory(options) {
 
     this.selectors = {
         item: 'item-wrapper',
-        text: 'text-wrapper'
+        text: 'content-wrapper'
     };
     this.elements.forEach(function (ele) {
         this.sliders.push(new ImageSlider(ele, this.selectors));
@@ -18,12 +18,8 @@ function ImageSlider(element, selectors) {
     this.texts = this.element.querySelectorAll('.' + this.selectors.text);
 
     this.images.forEach(function(imgContainer, index) {
-        var relativeText = this.texts[index];
         imgContainer.addEventListener("click", function() {
             this.setCurrentItem(index);
-            if (!isWholeElementInViewport(relativeText)) {
-                relativeText.scrollIntoView({ block: 'end', inline: 'nearest', behavior: 'smooth' });
-            }
         }.bind(this));
     }.bind(this));
     this.setCurrentItem(0);
@@ -32,15 +28,25 @@ function ImageSlider(element, selectors) {
 ImageSlider.prototype.setCurrentItem = function (val) {
     this.images.forEach(function (container) {
         container.className = this.selectors.item;
+        this.texts[val].removeEventListener('transitionend', showElement);
     }.bind(this));
 
     this.texts.forEach(function (container) {
         container.className = this.selectors.text;
     }.bind(this));
 
+    this.texts[val].addEventListener('transitionend', showElement.bind(this, this.texts[val].parentElement), false);
+
+    this.texts[val].parentElement.style.height = this.texts[val].clientHeight + 'px';
     this.images[val].className = this.selectors.item + ' selected';
     this.texts[val].className = this.selectors.text + ' visible';
 };
+
+function showElement(ele) {
+    if (!isWholeElementInViewport(ele)) {
+        ele.scrollIntoView({ block: 'end', inline: 'nearest', behavior: 'smooth' });
+    }
+}
 
 function isWholeElementInViewport (el) {
 
