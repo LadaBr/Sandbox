@@ -11,8 +11,8 @@
     position: relative;
 }
 
-.item-wrapper, .content-wrapper, .contents {
-    transition: all 0.5s;
+.item-wrapper, .content-wrapper {
+    transition: opacity 1s;
 }
 
 .item-wrapper {

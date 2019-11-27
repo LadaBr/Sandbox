@@ -21,35 +21,42 @@ function ImageSlider(element, selectors) {
         imgContainer.addEventListener("click", function() {
             this.setCurrentItem(index);
         }.bind(this));
+        this.texts[index].addEventListener('transitionend', showElement.bind(this, this.texts[index]));
     }.bind(this));
     this.setCurrentItem(0);
 }
 
 ImageSlider.prototype.setCurrentItem = function (val) {
-    this.images.forEach(function (container) {
+    var parent = this.texts[val].parentElement;
+    var ele = this.texts[val];
+    this.images.forEach(function (container, index) {
         container.className = this.selectors.item;
-        this.texts[val].removeEventListener('transitionend', showElement);
+
     }.bind(this));
 
     this.texts.forEach(function (container) {
         container.className = this.selectors.text;
     }.bind(this));
 
-    this.texts[val].addEventListener('transitionend', showElement.bind(this, this.texts[val].parentElement), false);
+    if (parent.clientHeight <= ele.clientHeight) {
+        parent.style.height = ele.clientHeight + 'px';
+    }
 
-    this.texts[val].parentElement.style.height = this.texts[val].clientHeight + 'px';
     this.images[val].className = this.selectors.item + ' selected';
-    this.texts[val].className = this.selectors.text + ' visible';
+    ele.className = this.selectors.text + ' visible';
 };
 
 function showElement(ele) {
+    if (ele.className !== this.selectors.text + ' visible') return;
+    if (ele.parentElement.clientHeight > ele.clientHeight) {
+        ele.parentElement.style.height = ele.clientHeight + 'px';
+    }
     if (!isWholeElementInViewport(ele)) {
         ele.scrollIntoView({ block: 'end', inline: 'nearest', behavior: 'smooth' });
     }
 }
 
 function isWholeElementInViewport (el) {
-
     var rect = el.getBoundingClientRect();
     return (
         rect.top >= 0 &&
