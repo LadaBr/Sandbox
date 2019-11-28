@@ -1,5 +1,5 @@
 function TypedTextFactory(selector) {
-    this.elements = document.querySelectorAll(selector);
+    this.elements = Array.prototype.slice.call(document.querySelectorAll(selector), 0);
     this.elements.forEach(function (ele) {
         new TypedText(ele);
     }.bind(this));
@@ -9,7 +9,7 @@ function TypedText(ele) {
     this.index = 0;
     this.texts = [];
     this.ele = ele;
-    ele.querySelectorAll('span').forEach(function (value) {
+    Array.prototype.slice.call(ele.querySelectorAll('span'), 0).forEach(function (value) {
         this.texts.push(value.innerHTML);
     }.bind(this));
     if (!this.texts.length) this.texts.push(ele.innerText);
@@ -45,5 +45,6 @@ TypedText.prototype.erase = function (txtContainer) {
         txtContainer.innerHTML = txtContainer.innerHTML.substring(0, txtContainer.innerHTML.length - 1);
     }.bind(this), parseFloat(this.ele.dataset.eraseSpeed));
 };
+
 
 new TypedTextFactory('.typed-text');
